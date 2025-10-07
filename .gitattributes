@@ -1,0 +1,178 @@
+# .gitattributes for mklndir - Directory Hardlinking Tool
+# This file defines attributes for Git to handle files consistently across platforms
+# See: https://git-scm.com/docs/gitattributes
+
+# =============================================================================
+# Auto detect text files and perform LF normalization
+# =============================================================================
+* text=auto
+
+# =============================================================================
+# Source code files - ensure consistent line endings
+# =============================================================================
+*.py text eol=lf
+*.sh text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.rst text eol=lf
+
+# =============================================================================
+# Configuration and data files
+# =============================================================================
+*.toml text eol=lf
+*.cfg text eol=lf
+*.ini text eol=lf
+*.conf text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.xml text eol=lf
+
+# =============================================================================
+# Build and packaging files
+# =============================================================================
+Makefile text eol=lf
+*.mk text eol=lf
+setup.py text eol=lf
+setup.cfg text eol=lf
+pyproject.toml text eol=lf
+MANIFEST.in text eol=lf
+requirements*.txt text eol=lf
+*.in text eol=lf
+
+# =============================================================================
+# Documentation files
+# =============================================================================
+*.1 text eol=lf
+*.2 text eol=lf
+*.3 text eol=lf
+*.4 text eol=lf
+*.5 text eol=lf
+*.6 text eol=lf
+*.7 text eol=lf
+*.8 text eol=lf
+*.9 text eol=lf
+*.man text eol=lf
+
+# =============================================================================
+# License and legal files
+# =============================================================================
+LICENSE text eol=lf
+COPYING text eol=lf
+COPYRIGHT text eol=lf
+NOTICE text eol=lf
+AUTHORS text eol=lf
+CONTRIBUTORS text eol=lf
+CHANGELOG text eol=lf
+CHANGELOG.* text eol=lf
+HISTORY text eol=lf
+HISTORY.* text eol=lf
+
+# =============================================================================
+# Git specific files
+# =============================================================================
+.gitignore text eol=lf
+.gitattributes text eol=lf
+.gitmodules text eol=lf
+
+# =============================================================================
+# Shell scripts and executable files
+# =============================================================================
+*.sh text eol=lf
+*.bash text eol=lf
+*.zsh text eol=lf
+*.fish text eol=lf
+
+# =============================================================================
+# Binary files - treat as binary, don't perform text transformations
+# =============================================================================
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary
+*.bz2 binary
+*.xz binary
+*.7z binary
+*.rar binary
+*.whl binary
+*.egg binary
+
+# =============================================================================
+# Special handling for specific file types
+# =============================================================================
+
+# Python bytecode files - always binary
+*.pyc binary
+*.pyo binary
+*.pyd binary
+
+# Archives and compressed files
+*.tar.gz binary
+*.tgz binary
+*.tar.bz2 binary
+*.tbz2 binary
+*.tar.xz binary
+*.txz binary
+
+# =============================================================================
+# Export ignore (files not included in git archive)
+# =============================================================================
+.gitignore export-ignore
+.gitattributes export-ignore
+.github/ export-ignore
+tests/ export-ignore
+examples/ export-ignore
+docs/ export-ignore
+*.md export-ignore
+Makefile export-ignore
+demo_man.sh export-ignore
+install_man.sh export-ignore
+
+# =============================================================================
+# Language-specific settings
+# =============================================================================
+
+# Python files - use LF and detect as Python for syntax highlighting
+*.py linguist-language=Python
+
+# Shell scripts - detect as Shell
+*.sh linguist-language=Shell
+
+# Man pages - detect as Roff
+*.1 linguist-language=Roff
+*.2 linguist-language=Roff
+*.3 linguist-language=Roff
+*.4 linguist-language=Roff
+*.5 linguist-language=Roff
+*.6 linguist-language=Roff
+*.7 linguist-language=Roff
+*.8 linguist-language=Roff
+*.9 linguist-language=Roff
+
+# Configuration files
+*.toml linguist-language=TOML
+*.yaml linguist-language=YAML
+*.yml linguist-language=YAML
+
+# =============================================================================
+# Diff settings for better readability
+# =============================================================================
+
+# Python files - use Python-specific diff driver if available
+*.py diff=python
+
+# Markdown files - use built-in markdown diff
+*.md diff=markdown
+
+# =============================================================================
+# Merge settings
+# =============================================================================
+
+# Don't merge certain files, always take one side
+CHANGELOG* merge=ours
+HISTORY* merge=ours

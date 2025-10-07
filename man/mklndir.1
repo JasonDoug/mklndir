@@ -1,0 +1,206 @@
+.TH MKLNDIR 1 "October 2024" "mklndir 1.0.0" "User Commands"
+.SH NAME
+mklndir \- create hardlinks for all files in a directory structure
+.SH SYNOPSIS
+.B mklndir
+[\fIOPTION\fR]... \fISOURCE\fR \fITARGET\fR
+.SH DESCRIPTION
+.B mklndir
+is a directory hardlinking tool that creates hardlinks for all files within a directory structure. Since directories themselves cannot be hardlinked in Unix-like systems, this tool recursively hardlinks individual files while preserving the directory structure.
+
+The tool walks through the source directory tree, creates corresponding directories in the target location, and uses the
+.BR link (2)
+system call to create hardlinks for each regular file. This results in space-efficient file organization where the same file data is accessible from multiple directory structures without duplication.
+
+.SH OPTIONS
+.TP
+.BR \-h ", " \-\-help
+Show help message and exit.
+.TP
+.BR \-\-version
+Show program's version number and exit.
+.TP
+.BR \-v ", " \-\-verbose
+Enable verbose output. Shows detailed information about each operation including files being hardlinked, directories being created, and files being excluded.
+.TP
+.BR \-n ", " \-\-dry\-run
+Show what would be done without actually performing any operations. This is useful for previewing the effects of the command before execution.
+.TP
+.BR \-o ", " \-\-overwrite
+Overwrite existing files in the target directory. By default, existing files are skipped. When this option is used, existing files that are not already hardlinked to the source will be removed and replaced with hardlinks.
+.TP
+.BR \-e ", " \-\-exclude " " \fIPATTERN\fR...
+Exclude files and directories matching the specified glob patterns. Multiple patterns can be specified. Patterns are matched against both the full path and the basename of each file or directory.
+.TP
+.BR \-\-stats
+Show operation statistics at the end of execution, including counts of files hardlinked, directories created, files skipped, and errors encountered.
+
+.SH ARGUMENTS
+.TP
+.I SOURCE
+Source directory path. Must be an existing directory containing the files to be hardlinked.
+.TP
+.I TARGET
+Target directory path. If it doesn't exist, it will be created. If it exists, it must be a directory.
+
+.SH EXAMPLES
+.TP
+Basic directory hardlinking:
+.B mklndir /home/user/documents /backup/documents
+.TP
+Preview operations with dry run:
+.B mklndir /source /target --dry-run --verbose
+.TP
+Exclude temporary and log files:
+.B mklndir /source /target --exclude "*.tmp" "*.log" "__pycache__"
+.TP
+Overwrite existing files with detailed output:
+.B mklndir /source /target --overwrite --verbose --stats
+.TP
+Create space-efficient backup:
+.B mklndir /home/user/project /backups/project-$(date +%Y%m%d)
+
+.SH EXIT STATUS
+.B mklndir
+exits with one of the following values:
+.TP
+.B 0
+Successful completion with no errors.
+.TP
+.B 1
+One or more errors occurred during execution, or invalid arguments were provided.
+
+.SH HARDLINKS
+Hardlinks are directory entries that point to the same inode as another file. They have several important properties:
+
+.IP \(bu 2
+Hardlinked files share the same data blocks on disk, saving space.
+.IP \(bu 2
+Changes to one hardlinked file appear in all linked locations instantly.
+.IP \(bu 2
+Hardlinks can only be created within the same filesystem.
+.IP \(bu 2
+Deleting one hardlink doesn't affect others; the file data is only removed when the last hardlink is deleted.
+.IP \(bu 2
+Hardlinks preserve file permissions, ownership, and timestamps.
+
+.SH USE CASES
+.SS Backup Systems
+Create space-efficient backups where unchanged files are hardlinked rather than copied:
+.RS
+.B mklndir /data /backup/$(date +%Y-%m-%d)
+.RE
+
+.SS Development Environments
+Link source code to multiple build directories:
+.RS
+.B mklndir /src/project /builds/debug/src --exclude "*.o" "*.obj"
+.RE
+
+.SS Content Distribution
+Organize the same files in multiple directory structures:
+.RS
+.B mklndir /media/by-date/2023 /media/by-genre/music
+.RE
+
+.SH LIMITATIONS
+.IP \(bu 2
+Hardlinks can only be created within the same filesystem. Cross-filesystem operations will fail.
+.IP \(bu 2
+Only regular files can be hardlinked. Directories, symbolic links, device files, and other special files are handled by creating directory structure or skipping.
+.IP \(bu 2
+Some filesystems have limits on the number of hardlinks per file (typically 32,000 or more).
+.IP \(bu 2
+Network filesystems may not support hardlinks or may have degraded performance.
+
+.SH ERROR HANDLING
+The tool handles various error conditions gracefully:
+
+.IP \(bu 2
+\fBCross-device links\fR: Detected and reported when source and target are on different filesystems.
+.IP \(bu 2
+\fBPermission errors\fR: Individual permission failures are reported and execution continues.
+.IP \(bu 2
+\fBExisting files\fR: Can be skipped (default) or overwritten (with \fB--overwrite\fR).
+.IP \(bu 2
+\fBSpecial files\fR: Non-regular files are safely skipped.
+
+.SH FILESYSTEM COMPATIBILITY
+Most modern Unix filesystems support hardlinks:
+
+.IP \(bu 2
+\fBSupported\fR: ext2, ext3, ext4, XFS, Btrfs, ZFS, UFS, NTFS (on Linux)
+.IP \(bu 2
+\fBNot supported\fR: FAT32, some network filesystems (NFS, SMB/CIFS)
+.IP \(bu 2
+\fBLimited support\fR: Some network filesystems may support hardlinks but with performance penalties
+
+.SH SECURITY CONSIDERATIONS
+.IP \(bu 2
+Hardlinked files share the same permissions. Changes to permissions affect all hardlinks.
+.IP \(bu 2
+Setuid and setgid bits are preserved in hardlinks, which may have security implications.
+.IP \(bu 2
+The tool preserves original file ownership and permissions.
+
+.SH PERFORMANCE
+.IP \(bu 2
+Hardlinking is much faster than copying as only metadata operations are performed.
+.IP \(bu 2
+Large directories are processed sequentially; very large directory trees may take time to process.
+.IP \(bu 2
+Network filesystems may have slower hardlink operations compared to local filesystems.
+
+.SH DIAGNOSTICS
+Common error messages and their meanings:
+
+.TP
+.B "Invalid cross-device link"
+Source and target are on different filesystems. Use
+.BR df (1)
+to check filesystem boundaries.
+
+.TP
+.B "Permission denied"
+Insufficient permissions to read source files or write to target directory. Check file and directory permissions.
+
+.TP
+.B "Operation not supported"
+The filesystem doesn't support hardlinks (e.g., FAT32, some network mounts).
+
+.TP
+.B "File exists"
+Target file exists and \fB--overwrite\fR was not specified. The file will be skipped.
+
+.SH ENVIRONMENT
+The tool doesn't use any special environment variables but respects standard filesystem permissions and access controls.
+
+.SH FILES
+.TP
+.B ~/.local/bin/mklndir
+Default installation location when installed with \fBpip install --user\fR.
+
+.SH BUGS
+Report bugs at: https://github.com/yourusername/mklndir/issues
+
+.SH AUTHOR
+Written by the mklndir development team.
+
+.SH COPYRIGHT
+Copyright \(co 2024 mklndir. License MIT: MIT License <https://opensource.org/licenses/MIT>.
+.br
+This is free software: you are free to change and redistribute it. There is NO WARRANTY, to the extent permitted by law.
+
+.SH SEE ALSO
+.BR ln (1),
+.BR cp (1),
+.BR rsync (1),
+.BR find (1),
+.BR stat (1),
+.BR link (2),
+.BR unlink (2)
+
+The full documentation is maintained as a Markdown file. See the project README.md for additional examples and troubleshooting information.
+
+.SH STANDARDS
+The tool follows POSIX standards for filesystem operations and command-line interface conventions.
