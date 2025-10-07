@@ -7,7 +7,7 @@ recursively hardlinks individual files while preserving the directory structure.
 """
 
 __version__ = "1.0.0"
-__author__ = "mklndir"
+__author__ = "JasonDoug"
 __description__ = "Directory hardlinking tool for space-efficient file organization"
 
 from .core import DirectoryHardlinker

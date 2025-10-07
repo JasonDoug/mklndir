@@ -10,10 +10,10 @@ readme = "README.md"
 requires-python = ">=3.7"
 license = {text = "MIT"}
 authors = [
-    {name = "mklndir", email = ""}
+    {name = "JasonDoug", email = "jason@potterlabs.xyz"}
 ]
 maintainers = [
-    {name = "mklndir", email = ""}
+    {name = "JasonDoug", email = "jason@potterlabs.xyz"}
 ]
 keywords = ["hardlink", "directory", "backup", "filesystem", "storage", "space-efficient"]
 classifiers = [

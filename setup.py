@@ -14,12 +14,12 @@ version = "1.0.0"
 setup(
     name="mklndir",
     version=version,
-    author="mklndir",
-    author_email="",
+    author="JasonDoug",
+    author_email="jason@potterlabs.xyz",
     description="Directory hardlinking tool for space-efficient file organization",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/mklndir",
+    url="https://github.com/JasonDoug/mklndir",
     packages=find_packages(),
     data_files=[
         ("share/man/man1", ["man/mklndir.1"]),
@@ -68,9 +68,9 @@ setup(
     },
     keywords="hardlink directory backup filesystem storage space-efficient",
     project_urls={
-        "Bug Reports": "https://github.com/yourusername/mklndir/issues",
-        "Source": "https://github.com/yourusername/mklndir",
-        "Documentation": "https://github.com/yourusername/mklndir#readme",
+        "Bug Reports": "https://github.com/JasonDoug/mklndir/issues",
+        "Source": "https://github.com/JasonDoug/mklndir",
+        "Documentation": "https://github.com/JasonDoug/mklndir#readme",
     },
     include_package_data=True,
     zip_safe=False,
